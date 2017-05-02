@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- Bean declarations go here -->
+
+	<bean id="duke" class="com.springinaction.springidol.Juggler" />
+
+	<bean id="newDuke" class="com.springinaction.springidol.Juggler">
+		<constructor-arg value="15" />
+	</bean>
+
+	<bean id="sonnet29" class="com.springinaction.springidol.Sonnet29" />
+
+	<bean id="poeticDuke" class="com.springinaction.springidol.PoeticJuggler">
+		<constructor-arg value="18" />
+		<constructor-arg ref="sonnet29" />
+	</bean>
+
+	<!-- 通过工厂方法创建Bean -->
+	<!-- 指定创建调用的静态方法 -->
+	<bean id="stage" class="com.springinaction.springidol.Stage"
+		factory-method="getInstance" />
+
+	<!-- 每一个人装配不同的门票 -->
+	<!-- Spring在每次请求时都为Bean产生一个新的实例 -->
+	<bean id="ticket" class="com.springinaction.springidol.Ticket"
+		scope="prototype" />
+
+	<!-- 可以在beans里面使用 default-init-method 和 default-destroy-method -->
+	<bean id="auditorium" class="com.springinaction.springidol.Auditorium"
+		init-method="turnOnLights" destroy-method="turnOffLights" />
+
+	<!-- 使用setter方式注入 -->
+	<bean id="saxophone" class="com.springinaction.springidol.Saxophone" />
+	<bean id="kenny" class="com.springinaction.springidol.Instrumentalist">
+		<property name="song" value="Jingle Bells" />
+		<property name="age" value="50" />
+		<property name="instrument" ref="saxophone" />
+	</bean>
+	
+	<!-- 使用内部Bean -->
+	<bean id="pickyKenny" class="com.springinaction.springidol.Instrumentalist">
+		<property name="song" value="Often go home" />
+		<property name="age" value="30" />
+		<property name="instrument">
+			<bean class="com.springinaction.springidol.Piano" />
+		</property>
+	</bean>
+
+</beans>
