@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- Bean declarations go here -->
+	<bean id="spELDemo" class="com.springinaction.springidol.spel.SpELDemo">
+
+		<!-- 注入字面值 -->
+		<property name="count" value="#{20}" />
+
+		<!-- 这个为何不对？ -->
+		<!-- <property name="isLargeCircle" value="#{false}" /> -->
+		<!-- Caused by: org.springframework.beans.NotWritablePropertyException: 
+			Invalid property 'isLargeCircle' of bean class [com.springinaction.springidol.spel.SpELDemo]: 
+			Bean property 'isLargeCircle' is not writable or has an invalid setter method. 
+			Does the parameter type of the setter match the return type of the getter? -->
+		<!-- <property name="isLargeCircle" value="#{400 ge 100}" /> -->
+
+		<!-- 字符串值必须加引号 -->
+		<property name="song" value="#{'Yong homeie'}" />
+
+		<!-- <property name="circumference" value=""/> <property name="perimeter" 
+			value="#{20}"/> -->
+		<!-- 错误写法 -->
+		<!-- <property name="randomNum" value="T{java.util.Math}.random()" /> -->
+		<!-- <property name="randomNum" value="#{T[java.util.Math].random()}" /> -->
+		<property name="randomNum" value="#{T(java.lang.Math).random()}" />
+
+		<property name="radius" value="20" />
+		<!-- 直接引用spELDemo.radius获得半径 没有成功 -->
+		<property name="circumference" value="#{T(java.lang.Math).PI*2*20}" />
+
+		<!-- 可以直接引用 private的属性 -->
+		<property name="bakSong" value="#{carl.song}" />
+	</bean>
+
+	<bean id="carl" class="com.springinaction.springidol.spel.SpELPerformer">
+		<property name="song" value="day day up" />
+	</bean>
+
+
+	<bean id="hank" class="com.springinaction.springidol.spel.OneManBand">
+		<!-- 装配list类型的属性 -->
+		<property name="instruments">
+			<!-- 此标签元素不能忘记 -->
+			<list>
+				<ref bean="violin" />
+				<ref bean="guitar" />
+				<ref bean="piano" />
+			</list>
+		</property>
+		<property name="songs">
+			<!-- 注意是props -->
+			<props>
+				<prop key="GUITAR">STRUM</prop>
+				<prop key="CYMBAL">CRASH</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="violin" class="com.springinaction.springidol.Violin" />
+	<bean id="guitar" class="com.springinaction.springidol.Guitar" />
+	<bean id="piano" class="com.springinaction.springidol.Piano" />
+
+</beans>
